@@ -69,7 +69,7 @@ export async function generateGTAStyleImage(imageFile: File): Promise<string> {
     const generatedParts = imageGenResult.response.candidates?.[0]?.content?.parts || [];
     const generatedImagePart = generatedParts.find((part: { inlineData?: { data?: string } }) => part.inlineData?.data);
 
-    if (generatedImagePart) {
+    if (generatedImagePart && generatedImagePart.inlineData?.data) {
       console.log('GTA风格图片生成成功!');
       return generatedImagePart.inlineData.data;
     } else {
