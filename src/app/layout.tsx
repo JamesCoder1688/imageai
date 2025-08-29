@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "GTA AI - Free Magical GTA Art Image Generator",
     description: "Transform photos to authentic GTA art with our AI-powered GTA image generator. Create stunning GTA-style characters and scenes instantly.",
-    url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    url: process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : "https://imageai.pages.dev"),
     siteName: "GTA AI",
     locale: "en_US",
     type: "website",
