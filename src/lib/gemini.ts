@@ -63,9 +63,7 @@ export async function generateGTAStyleImage(imageFile: File): Promise<string> {
 最终结果应该看起来像官方GTA角色艺术或宣传图像。`;
 
     // 使用正确的API调用方式
-    const imageGenResult = await imageGenModel.generateContent({
-      contents: gtaPrompt,
-    });
+    const imageGenResult = await imageGenModel.generateContent(gtaPrompt);
 
     // 查找生成的图片数据
     const generatedParts = imageGenResult.response.candidates?.[0]?.content?.parts || [];
