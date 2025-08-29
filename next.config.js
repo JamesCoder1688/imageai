@@ -14,28 +14,33 @@ const nextConfig = {
   // Reduce bundle size
   compress: true,
   
-  // Configure webpack to reduce build output size
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Reduce client-side bundle size
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 1,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-            maxSize: 244000, // ~240KB per chunk
-          },
-        },
-      };
+  // Disable webpack caching for Cloudflare Pages
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Disable persistent caching to avoid large cache files
+    if (!dev) {
+      config.cache = false;
     }
+    
+    // Configure chunk splitting for both client and server
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      maxSize: 244000, // ~240KB per chunk
+      cacheGroups: {
+        default: {
+          minChunks: 1,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: isServer ? 'server-vendor' : 'client-vendor',
+          priority: -10,
+          chunks: 'all',
+          maxSize: 244000, // ~240KB per chunk
+        },
+      },
+    };
+    
     return config;
   },
 }
