@@ -110,7 +110,7 @@ export default function ImageProcessor() {
                 Analysis Complete!
               </h3>
               <p className="text-white/70">
-                Here's what I see in your image:
+                Here&apos;s what I see in your image:
               </p>
             </div>
 
@@ -141,7 +141,7 @@ export default function ImageProcessor() {
 
             <div className="mt-4 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
               <p className="text-sm text-yellow-400">
-                <strong>Note:</strong> This is a demo using Gemini's vision capabilities. 
+                <strong>Note:</strong> This is a demo using Gemini&apos;s vision capabilities. 
                 In a full implementation, this would generate an actual GTA-style image transformation.
               </p>
             </div>

@@ -8,8 +8,8 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// Imagen 4 API endpoint for image generation
-const IMAGE_GEN_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:generateImage';
+// Imagen 4 API endpoint for image generation (not currently used)
+// const IMAGE_GEN_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:generateImage';
 
 export async function generateGTAStyleImage(imageFile: File): Promise<string> {
   try {
@@ -69,7 +69,7 @@ export async function generateGTAStyleImage(imageFile: File): Promise<string> {
 
     // 查找生成的图片数据
     const generatedParts = imageGenResult.response.candidates?.[0]?.content?.parts || [];
-    const generatedImagePart = generatedParts.find((part: any) => part.inlineData?.data);
+    const generatedImagePart = generatedParts.find((part: { inlineData?: { data?: string } }) => part.inlineData?.data);
 
     if (generatedImagePart) {
       console.log('GTA风格图片生成成功!');

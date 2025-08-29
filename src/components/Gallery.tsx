@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Eye } from 'lucide-react';
+import Link from 'next/link';
 
 const galleryImages = [
   { id: 1, src: '/images/gallery/gtaai_background.jpeg', title: 'GTA Style Portrait' },
@@ -88,9 +89,9 @@ export default function Gallery() {
           <p className="text-white/80 mb-6">
             Upload your photo and transform it into stunning GTA-style artwork
           </p>
-          <a href="/#converter" className="gtavi-button-primary">
+          <Link href="/#converter" className="gtavi-button-primary">
             Start Creating Now
-          </a>
+          </Link>
         </div>
       </motion.div>
 
