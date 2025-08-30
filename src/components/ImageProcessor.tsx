@@ -6,7 +6,8 @@ import ImageUploader from './ImageUploader';
 import { Download, Sparkles, ArrowLeft } from 'lucide-react';
 
 interface ProcessingResult {
-  description: string;
+  success: boolean;
+  imageBase64: string;
   originalFileName: string;
   processedAt: string;
 }
@@ -48,6 +49,17 @@ export default function ImageProcessor() {
   const handleReset = () => {
     setResult(null);
     setError(null);
+  };
+
+  const handleDownload = () => {
+    if (!result?.imageBase64) return;
+    
+    const link = document.createElement('a');
+    link.href = `data:image/png;base64,${result.imageBase64}`;
+    link.download = `gta-style-${result.originalFileName}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -107,17 +119,19 @@ export default function ImageProcessor() {
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Analysis Complete!
+                Transformation Complete!
               </h3>
               <p className="text-white/70">
-                Here&apos;s what I see in your image:
+                Your image has been transformed into GTA style:
               </p>
             </div>
 
             <div className="bg-black/40 rounded-lg p-6 mb-6">
-              <p className="text-white/90 leading-relaxed">
-                {result.description}
-              </p>
+              <img 
+                src={`data:image/png;base64,${result.imageBase64}`}
+                alt="GTA Style Transformation"
+                className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+              />
             </div>
 
             <div className="text-sm text-white/60 mb-6">
@@ -133,16 +147,18 @@ export default function ImageProcessor() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Process Another Image
               </button>
-              <button className="gtavi-button-primary flex-1">
+              <button 
+                onClick={handleDownload}
+                className="gtavi-button-primary flex-1"
+              >
                 <Download className="w-4 h-4 mr-2" />
                 Download Result
               </button>
             </div>
 
-            <div className="mt-4 p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-              <p className="text-sm text-yellow-400">
-                <strong>Note:</strong> This is a demo using Gemini&apos;s vision capabilities. 
-                In a full implementation, this would generate an actual GTA-style image transformation.
+            <div className="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+              <p className="text-sm text-green-400">
+                <strong>Success!</strong> Your image has been transformed using Gemini&apos;s advanced image generation capabilities.
               </p>
             </div>
           </motion.div>

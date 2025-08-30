@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure for Cloudflare Pages with SSR support
+  // Configure for static export to Cloudflare Pages
+  output: 'export',
+  trailingSlash: true,
   images: {
     unoptimized: true,
   },
