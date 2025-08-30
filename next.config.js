@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure for Cloudflare Pages with Functions support
+  // Configure for Cloudflare Pages with SSR support
   images: {
     unoptimized: true,
   },
-  // Keep API routes enabled for Cloudflare Functions
   
   // Optimize for Cloudflare Pages deployment
   experimental: {

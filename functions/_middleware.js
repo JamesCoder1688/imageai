@@ -1,9 +1,9 @@
 // Cloudflare Pages Functions middleware
 export async function onRequest(context) {
-  // Add CORS headers for API requests
-  const response = await context.next();
+  const { request, next, env } = context;
   
-  // Set CORS headers
+  // Handle CORS
+  const response = await next();
   response.headers.set('Access-Control-Allow-Origin', '*');
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
