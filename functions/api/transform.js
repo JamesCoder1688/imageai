@@ -1,8 +1,8 @@
 // Cloudflare Functions API route for image transformation
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize Gemini client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'AIzaSyAkvgRnFOaAmX0DXCfXwwwprwvmqTZTRu4');
+// Initialize Gemini client - will be set per request
+let genAI;
 
 async function generateGTAStyleImage(imageFile) {
   try {
@@ -50,7 +50,24 @@ Generate a new image in this style, not just describe it.`;
 
 export async function onRequestPost(context) {
   try {
-    const { request } = context;
+    const { request, env } = context;
+    
+    // Initialize Gemini client with environment variables
+    if (!genAI) {
+      const apiKey = env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return new Response(JSON.stringify({
+          error: 'GEMINI_API_KEY environment variable is not set'
+        }), { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          }
+        });
+      }
+      genAI = new GoogleGenerativeAI(apiKey);
+    }
     const formData = await request.formData();
     const file = formData.get('image');
 
