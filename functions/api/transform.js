@@ -51,19 +51,50 @@ Style requirements:
 
 Make it look exactly like official GTA character artwork or promotional art.`;
 
-    // Use Imagen 4.0 for actual image generation
-    const imageGenModel = genAI.getGenerativeModel({ model: 'imagen-3.0-generate-001' });
+    // Try multiple approaches for image generation
+    let generatedImagePart = null;
     
-    const imageGenResult = await imageGenModel.generateContent({
-      contents: [{ 
-        role: 'user', 
-        parts: [{ text: gtaPrompt }] 
-      }]
-    });
-
-    // Extract generated image from response
-    const generatedParts = imageGenResult.response.candidates?.[0]?.content?.parts || [];
-    const generatedImagePart = generatedParts.find((part) => part.inlineData?.data);
+    try {
+      // Method 1: Try Imagen 4.0 with generateImages API
+      console.log('Trying Imagen 4.0 generateImages API...');
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:generateImage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': env.GEMINI_API_KEY,
+        },
+        body: JSON.stringify({
+          prompt: gtaPrompt,
+          config: {
+            numberOfImages: 1,
+          }
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Imagen API response:', result);
+        if (result.generatedImages && result.generatedImages[0]) {
+          generatedImagePart = { inlineData: { data: result.generatedImages[0].image.imageBytes } };
+        }
+      }
+    } catch (imagenError) {
+      console.log('Imagen API failed, trying fallback:', imagenError.message);
+    }
+    
+    // Method 2: Try Gemini with image generation capability
+    if (!generatedImagePart) {
+      try {
+        console.log('Trying Gemini 2.5 Flash for image generation...');
+        const imageGenModel = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-image-preview' });
+        const imageGenResult = await imageGenModel.generateContent([gtaPrompt, imagePart]);
+        
+        const generatedParts = imageGenResult.response.candidates?.[0]?.content?.parts || [];
+        generatedImagePart = generatedParts.find((part) => part.inlineData?.data);
+      } catch (geminiError) {
+        console.log('Gemini image generation failed:', geminiError.message);
+      }
+    }
 
     if (generatedImagePart && generatedImagePart.inlineData?.data) {
       console.log('GTA-style image generated successfully!');
